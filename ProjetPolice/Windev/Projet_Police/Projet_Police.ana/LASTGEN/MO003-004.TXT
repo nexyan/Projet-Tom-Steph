@@ -1,0 +1,7 @@
+//MO003-004.TXT ANA00003 TO ANA00004
+Utilisateurs		TAR	111	nouvelle taille enregistrement : 111
+Utilisateurs		IDE-*		fichier sans identifiant
+Utilisateurs	IDUtilisateurs	RUB-		la rubrique IDUtilisateurs est supprimée
+Utilisateurs	Nom	RUB-		la rubrique Nom est supprimée
+Utilisateurs	Prenom	RUB-		la rubrique Prenom est supprimée
+Utilisateurs	Admin	RUB-		la rubrique Admin est supprimée

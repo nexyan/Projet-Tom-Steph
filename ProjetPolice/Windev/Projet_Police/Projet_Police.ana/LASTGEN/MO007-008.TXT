@@ -1,0 +1,3 @@
+//MO007-008.TXT ANA00007 TO ANA00008
+EcritureATWEB	Date_Import	NNR	Dateimport	ATTENTION : la rubrique Dateimport a pour nouveau nom Date_Import
+EcritureATWEB	Date_Lettrage	NNR	Datelettrage	ATTENTION : la rubrique Datelettrage a pour nouveau nom Date_Lettrage

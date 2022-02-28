@@ -1,0 +1,191 @@
+    ============================================
+    = NOTE D'EXPLICATION DES LISTINGS D'APPELS =
+    =     DE TELEPHONIE MOBILE FREE (MTxx)     =
+    ============================================
+
+              - Mise a jour: 26/11/2013 -
+
+
+Les fichiers sont au format csv et peuvent etre ouverts avec Excel ou OpenOffice Calc, en utilisant le separateur Point-virgule (il ne faut pas cocher le separateur Espace, car l'affichage des colonnes ne serait pas correct).
+Lorsque les fichiers sont trop volumineux, ils sont compresses (zippes) au format .zip.
+
+Prestations:
+- MT10: fadet a partir du numero de telephone d'un abonne FREE sans geolocalisation
+- MT12: fadet a partir du numero d'IMSI d'un abonne FREE sans geolocalisation
+- MT13: fadet a partir du numero de telephone etranger en roaming sur le reseau FREE sans geolocalisation
+- MT14: fadet a partir du numero d'IMEI d'un ou plusieurs abonnes FREE sans geolocalisation
+- MT20: fadet a partir du numero de telephone d'un abonne FREE avec geolocalisation
+- MT22: fadet a partir du numero d'IMSI d'un abonne FREE avec geolocalisation
+- MT23: fadet a partir du numero de telephone etranger en roaming sur le reseau FREE avec geolocalisation
+- MT24: fadet a partir du numero d'IMEI d'un ou plusieurs abonnes FREE avec geolocalisation
+- MT30: fadet de tous les abonnes FREE MOBILE ayant ete en relation avec un numero a l'etranger (sans geolocalisation)
+- MT40: fadet des appels ayant transite par une cellule FREE MOBILE
+
+Lexique:
+1- Roaming:
+   - un abonne FREE MOBILE est en roaming lorsqu'il est dans un pays etranger
+   - un abonne etranger est en roaming sur le reseau de FREE MOBILE lorsqu'il est en France et qu'il utilise le reseau FREE MOBILE pour passer des appels VOIX/SMS/DATA
+2- Itinerance: un abonne FREE MOBILE est en itinerance lorsqu'il utilise en France le reseau d'Orange France pour passer des appels VOIX/SMS/DATA
+
+
+1- Type d'appel:
+----------------
+* VOIX: appels telephoniques
+* SMS: envoi et reception de SMS inter-personnels ou de service (MEVO, ...)
+* MMS: envoi et reception de MMS
+* LOC: information de localisation (et IMEI) de SMS ou MMS sur une cellule FREE MOBILE
+(il n'y a pas de ligne LOC lorsqu'un SMS ou MMS transite par une cellule ORANGE FRANCE)
+* DATA: connexions internet mobile
+
+
+2- Complement type d'appel:
+---------------------------
+Ce champ contient un complement d'information lorsqu'il s'agit d'appels VOIX ou SMS:
+
+* VOIX (cf. section 6- Appels VOIX):
+   - "ROAMING" pour les appels VOIX qu'un abonne FREE MOBILE a emis ou reçu dans un pays etranger (roaming a l'etranger)
+   - "inefficace": signifie que l'appel n'a pas abouti (ex: appel non decroche, mobile injoignable...)
+
+* SMS (cf. section 7- SMS/LOC):
+   - Lorsqu'un SMS provient d'une application, le type de service est indique dans ce champ (par exemple: "mevo" pour messagerie vocale)
+   
+
+3- msisdn cible/correspondant/renvoi:
+------------------------------------
+* Format des numeros:
+- les numeros sont au format international (pas de "00" devant le "33" pour les numeros français)
+- le numero peut etre vide ou incomplet, notamment en provenance de l'etranger
+- MEVO pour messagerie vocale (renvoi vers messagerie ou consultation de messagerie)
+
+* "msisdn cible":
+- numero de telephone de la cible: MT10/MT13/MT20/MT23; si fadet sur IMEI (MT14/MT24) ou sur IMSI (MT12/MT22), alors "msisdn cible" contient le numero de telephone associe a l'IMSI ou l'IMEI
+ou
+- numero de l'abonne FREE MOBILE s'il s'agit d'une MT30 (recherche des abonnes FREE ayant ete en relation avec un numero etranger
+ou
+- numero de l'abonne FREE MOBILE localise sur la cellule pour une MT40 (fadet de cellule)
+
+* "correspondant":
+- numero appelant ou appele de l'appel VOIX/SMS/MMS suivant le sens de l'appel
+- peut etre vide si l'operateur qui nous a transmis l'appel n'a pas fourni le numero (en general en provenance de l'etranger)
+
+* "renvoi": numero vers lequel l'appel est renvoye (MEVO si messagerie vocale)
+
+
+4- IMSI/IMEI:
+-------------
+* L'IMEI n'est renseigne que pour les appels:
+- VOIX (sauf renvoi, ROAMING et appel inefficace)
+- DATA
+- LOC (les tickets SMS et MMS ne contiennent pas l'information IMEI)
+
+* L'IMSI est renseigne pour tous les appels (sauf certains appels inefficaces)
+
+
+5- Localisation:
+----------------
+* fournie uniquement pour les fadets geolocalisees: MT20, MT22, MT23, MT24, MT40
+* fournie uniquement pour les tickets:
+- VOIX (sauf renvoi, ROAMING et appel inefficace)
+- DATA
+- LOC (les tickets SMS et MMS ne contiennent pas l'information localisation)
+
+* localisation/lac/ci/reseau
+- "localisation" contient le numero de cellule en hexadecimal (ex: 2080103FEDEE0 pour une cellule Orange (prefixe 20801), 2081503FEDEE0 pour une cellule FREE (prefixe 20815)); c'est ce numero qui doit etre communique a Orange pour localiser la cellule
+- "localisation lac" et "localisation ci" contiennent les valeurs decimales des LAC et CI, soit dans l'exemple ci-dessus 2080162102816, LAC=1022 (03FE) et CI=57056 (DEE0)
+- "reseau": Orange ou Free
+
+* longitude/latitude/azimuth/adresse
+- ne sont renseignes que pour une cellule FREE MOBILE, car nous n'avons pas les coordonnees et l'adresse des cellules Orange
+- pour obtenir les coordonnees et l'adresse des cellules Orange, vous devez requerir Orange avec le numero de cellule renseigne dans "localisation" (ex: 2080103FEDEE0) avec la date et l'heure de l'appel
+- l'adresse est divisee en 3 champs "adresse" (rue), "code postal", "ville"
+- la longitude et la latitude peuvent etre utilisees dans Google Earth
+
+* les femtocells:
+- pas d'identification automatique pour le moment (localisation/lac/ci/reseau sont renseignes, mais pas longitude/latitude/azimuth/adresse)
+- nous envoyer une demande, afin d'obtenir les adresses
+
+* on pourra recuperer la localisation FREE MOBILE des SMS et MMS dans les lignes LOC
+(si la cellule accrochee est une cellule ORANGE FRANCE, alors la ligne LOC n'existe pas et il faut s'adresser a ORANGE FRANCE pour obtenir la localisation du message)
+
+
+6- Appels VOIX:
+---------------
+* sens d'appel:
+- "emis": appel sortant du point de vue de l'abonne FREE MOBILE cible; pour une MT30, le sens de l'appel sera "emis" pour un appel d'un abonne FREE vers le numero etranger cible
+- "recu": appel entrant du point de vue de l'abonne FREE MOBILE cible; pour une MT30, le sens de l'appel sera "recu" pour un appel du numero etranger cible vers un abonne FREE
+- "renvoi": appel a destination de l'abonne FREE MOBILE cible et renvoye vers le numero indique dans "appel renvoye vers" (numero ou MEVO pour "messagerie vocale")
+
+* complement type d'appel:
+- les appels emis et reçus par un abonne FREE MOBILE a l'etranger sont marques dans la colonne "complement type d'appel" avec la valeur "ROAMING"
+- les appels inefficaces portent la mention "inefficace" dans la colonne 'complement type d'appel': cela signifie que l'appel n'a pas abouti (ex: appel non decroche, mobile injoignable...)
+
+* la localisation est renseignee pour les MT20, MT22, MT23, MT24, MT40, sauf pour les appels d'un abonne FREE MOBILE en ROAMING
+
+* l'IMSI est renseigne pour tous les appels voix (sauf dans certains appels inefficaces)
+
+* l'IMEI est renseigne sauf pour:
+- les renvois d'appel
+- les appels inefficaces
+- les appels d'un abonne FREE MOBILE en ROAMING
+
+
+7- SMS/LOC:
+-----------
+* complement type d'appel:
+- vide: echange de SMS interpersonnel
+- 'mevo': en provenance de la messagerie vocale
+- 'Otad', 'Valo', 'Sybase'...: en provenance ou a destination d'une application de service
+
+* sens d'appel:
+- "emis": SMS envoye par un abonne FREE au serveur de SMS
+- "recu": SMS delivre par le serveur de SMS au destinataire, que le destinataire soit un abonne FREE ou un abonne d'un operateur tiers
+
+* sms status:
+- 0: echec
+- 1: succes
+
+* localisation/IMEI
+- il n'y a pas de localisation et IMEI pour les SMS transitant par les cellules ORANGE FRANCE
+- pour les SMS transitant par les cellules FREE MOBILE, une ligne LOC (en plus de la ligne SMS) indique la cellule et sa localisation, ainsi que l'IMEI
+=> il y a donc deux lignes pour un seul SMS echange quand celui-ci passe par une cellule FREE MOBILE
+
+* l'IMSI est present
+* l'IMEI est present uniquement dans les tickets LOC
+
+
+8- MMS/LOC:
+-----------
+* sens d'appel:
+- "emis": MMS envoye par un abonne FREE
+- "recu": MMS delivre a un abonne FREE
+
+* sms status:
+- 0: echec
+- 1: succes
+- vide: statut inconnu
+
+* localisation/IMEI
+- il n'y a pas de localisation et IMEI pour les SMS transitant par les cellules ORANGE FRANCE
+- pour les SMS transitant par les cellules FREE MOBILE, une ligne LOC (en plus de la ligne MMS) indique la cellule et sa localisation, ainsi que l'IMEI
+=> il y a donc deux lignes pour un seul MMS echange quand celui-ci passe par une cellule FREE MOBILE
+
+* l'IMSI est present
+* l'IMEI est present uniquement dans les tickets LOC
+
+
+9- DATA:
+--------
+* La duree correspond a la duree de la session
+* IMEI, IMSI et localisation sont renseignes
+
+
+10- Particularite MT40:
+-----------------------
+* Seuls les tickets contenant une localisation sont presents dans la fadet, donc les tickets SMS et MMS ne sont pas integres aux MT40 (ni les appels VOIX inefficaces ou renvoyes)
+* Toutefois, les tickets LOC sont presents et indiquent un echange de SMS ou MMS, mais le numero du correspondant n'est pas indique (il faudra demander une MT10 ou MT20 pour le connaitre)
+
+
+11- Particularite MT14/MT24 (a partir de l'IMEI):
+-------------------------------------------------
+* Seuls les tickets contenant un IMEI sont presents dans la fadet, donc les tickets SMS et MMS ne sont pas integres aux MT14 et MT24 (ni les appels VOIX inefficaces, renvoyes ou en ROAMING)
+* Toutefois, les tickets LOC sont presents et indiquent un echange de SMS ou MMS, mais le numero du correspondant n'est pas indique (il faudra demander une MT10 ou MT20 pour le connaitre)
